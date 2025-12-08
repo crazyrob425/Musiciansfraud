@@ -209,4 +209,7 @@ def load_project(project_id):
 
 if __name__ == '__main__':
     port = int(os.getenv('APP_PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+    # Only bind to 0.0.0.0 in development, use 127.0.0.1 in production
+    host = '0.0.0.0' if debug_mode else '127.0.0.1'
+    app.run(host=host, port=port, debug=debug_mode)

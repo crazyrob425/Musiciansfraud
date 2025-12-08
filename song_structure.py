@@ -84,7 +84,21 @@ class SongStructureGenerator:
             lyrics: The lyrics to structure
             
         Returns:
-            Dictionary containing song structure
+            Dictionary containing song structure with keys:
+                - genre (str): The musical genre
+                - tempo (str): Tempo range in BPM
+                - time_signature (str): Time signature (e.g., "4/4")
+                - sections (list): List of section dictionaries with:
+                    - id (int): Section identifier
+                    - type (str): Section type (verse, chorus, etc.)
+                    - start_time (float): Start time in seconds
+                    - duration (float): Duration in seconds
+                    - end_time (float): End time in seconds
+                    - content (str): Section content/lyrics
+                    - notes (str): User notes for this section
+                    - editable (bool): Whether section is editable
+                - total_duration (float): Total song duration in seconds
+                - hooks (list): List of hook dictionaries with timing info
         """
         # Get genre template or use default
         template = self.genre_structures.get(genre, self.genre_structures["Pop"])

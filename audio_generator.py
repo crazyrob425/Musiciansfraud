@@ -13,6 +13,13 @@ import random
 class AudioGenerator:
     """Generate audio using synthesis and procedural generation"""
     
+    # Audio mixing constants
+    TRACK_VOLUME_REDUCTION = -6  # dB reduction per track to prevent clipping
+    RHYTHM_VOLUME_REDUCTION = -10  # dB reduction for rhythm track
+    BASS_VOLUME_REDUCTION = -8  # dB reduction for bass track
+    MELODY_VOLUME_REDUCTION = -12  # dB reduction for melody tracks
+    VOCAL_VOLUME_REDUCTION = -6  # dB reduction for vocal track
+    
     def __init__(self):
         """Initialize the audio generator"""
         # Default sample rate
@@ -70,12 +77,16 @@ class AudioGenerator:
         Generate audio from song parameters
         
         Args:
-            lyrics: Song lyrics
-            structure: Song structure dictionary
-            genre: Musical genre
-            instruments: List of instruments
-            vocal_type: Type of vocals
-            output_path: Path to save the output MP3
+            lyrics (str): Song lyrics text
+            structure (dict): Song structure dictionary from SongStructureGenerator
+                Should contain 'sections' list and 'total_duration' float
+            genre (str): Musical genre name (e.g., "Pop", "Rock")
+            instruments (list): List of instrument names to include
+            vocal_type (str): Type of vocals ("Male", "Female", "Mixed", "Choir", "Rap")
+            output_path (str): Full path where MP3 file should be saved
+            
+        Returns:
+            str: Path to the generated MP3 file
         """
         # Get tempo for genre
         tempo = self.genre_tempos.get(genre, 120)
@@ -115,7 +126,7 @@ class AudioGenerator:
                     track = track + AudioSegment.silent(duration=len(mixed_audio) - len(track))
                 
                 # Mix with reduced volume to prevent clipping
-                mixed_audio = mixed_audio.overlay(track - 6)  # -6 dB reduction
+                mixed_audio = mixed_audio.overlay(track + self.TRACK_VOLUME_REDUCTION)
         else:
             # Create silent track if no instruments
             mixed_audio = AudioSegment.silent(duration=int(structure.get("total_duration", 180) * 1000))
@@ -168,7 +179,7 @@ class AudioGenerator:
             current_time += beat_duration / 4
             beat_count += 1
         
-        return rhythm_track - 10  # Reduce volume
+        return rhythm_track + self.RHYTHM_VOLUME_REDUCTION
     
     def _generate_bass_track(self, structure, tempo):
         """Generate a bass track"""
@@ -190,7 +201,7 @@ class AudioGenerator:
             bass_track += note
             current_time += beat_duration
         
-        return bass_track - 8  # Reduce volume
+        return bass_track + self.BASS_VOLUME_REDUCTION
     
     def _generate_melody_track(self, instrument, structure, tempo):
         """Generate a melodic track for an instrument"""
@@ -221,7 +232,7 @@ class AudioGenerator:
             melody_track += note
             current_time += note_duration
         
-        return melody_track - 12  # Reduce volume
+        return melody_track + self.MELODY_VOLUME_REDUCTION
     
     def _generate_vocal_track(self, structure, vocal_type, tempo):
         """Generate a vocal track (placeholder with tones)"""
@@ -260,7 +271,7 @@ class AudioGenerator:
             
             current_time += section_duration
         
-        return vocal_track - 6  # Reduce volume
+        return vocal_track + self.VOCAL_VOLUME_REDUCTION
     
     def _apply_genre_effects(self, audio, genre):
         """Apply genre-specific effects"""
