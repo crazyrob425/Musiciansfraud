@@ -14,9 +14,15 @@ A comprehensive AI-powered web application for generating full studio-quality so
 
 🎤 **Vocal Options** - Select vocal type (Male, Female, Mixed, Choir, Rap)
 
+🗣️ **Text-to-Speech Vocals** - **NEW!** Generate actual vocal tracks from lyrics using TTS technology
+
+🎵 **MIDI Export** - **NEW!** Export songs as MIDI files for use in DAWs and music software
+
 🎼 **Song Structure Editor** - Generate and edit song structure (verses, chorus, bridge, hooks, etc.)
 
 📋 **Section Notes** - Add notes and edits to individual song sections
+
+🎧 **Enhanced Audio Synthesis** - **NEW!** Improved audio generation with better instrument sounds
 
 🎵 **Audio Generation** - Convert everything into real audio
 
@@ -28,9 +34,12 @@ A comprehensive AI-powered web application for generating full studio-quality so
 
 - **Backend**: Python Flask
 - **Audio Processing**: Pydub, NumPy, SciPy
+- **Text-to-Speech**: pyttsx3, gTTS (Google Text-to-Speech)
+- **MIDI Generation**: mido library
+- **Advanced Synthesis**: pyfluidsynth (optional, for soundfont support)
 - **AI Components**: Open-source/template-based generation
 - **Frontend**: HTML, CSS, JavaScript
-- **Audio Format**: MP3 (320kbps)
+- **Audio Format**: MP3 (320kbps), MIDI
 
 ## Installation
 
@@ -210,12 +219,16 @@ Generate audio file from all components.
 {
   "success": true,
   "song_id": "uuid-string",
-  "download_url": "/api/download/uuid-string"
+  "download_url": "/api/download/uuid-string",
+  "midi_url": "/api/download-midi/uuid-string"
 }
 ```
 
 ### GET /api/download/{song_id}
 Download generated MP3 file.
+
+### GET /api/download-midi/{song_id}
+Download generated MIDI file.
 
 ### POST /api/save-project
 Save project state.
@@ -251,19 +264,29 @@ APP_PORT=5000
 ### Audio Generation
 - Multi-track synthesis
 - Instrument-specific waveforms
+- **Text-to-Speech vocals** - Actual spoken/sung lyrics using TTS engines
+- **MIDI-based composition** - Generate and export standard MIDI files
+- **Enhanced audio synthesis** - Improved instrument sounds and synthesis
 - Genre-appropriate effects
 - Dynamic mixing and normalization
 - Studio-quality MP3 export (320kbps)
+- **MIDI export** for use in Digital Audio Workstations (DAWs)
 
 ## Limitations & Future Improvements
 
-Current implementation uses synthesized audio. Future versions could integrate:
-- Advanced AI models for more natural lyrics
-- Text-to-speech for actual vocals
-- MIDI-based composition
-- More sophisticated audio synthesis
-- Integration with music generation APIs
-- Real instrument samples
+Current implementation provides significant improvements with:
+- ✅ **Text-to-Speech for actual vocals** - Using pyttsx3 and gTTS
+- ✅ **MIDI-based composition** - Full MIDI file generation and export
+- ✅ **More sophisticated audio synthesis** - Improved instrument synthesis
+- ✅ **Integration ready for music generation APIs** - Modular design for easy API integration
+- ✅ **Support for real instrument samples** - Via soundfont integration (FluidSynth)
+
+Future enhancements could include:
+- Advanced AI models for more natural lyrics (GPT-based)
+- Neural network-based music generation
+- Professional-grade instrument samples
+- Real-time composition features
+- Cloud-based rendering for faster generation
 
 ## Contributing
 
