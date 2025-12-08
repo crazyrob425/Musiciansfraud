@@ -124,16 +124,9 @@ class TTSVocalsGenerator:
         if not GTTS_AVAILABLE:
             return None
         
-        # Configure language and settings based on vocal type
+        # Configure language - gTTS doesn't support vocal type variations
         lang = 'en'
         slow = False
-        
-        if vocal_type == "Rap":
-            # Faster speech for rap
-            slow = False
-        else:
-            # Normal speech
-            slow = False
         
         # Generate to temporary file if no output path provided
         if output_path is None:

@@ -84,7 +84,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-**Note**: Some TTS features require system audio drivers. The app will work with available engines (gTTS is recommended and works offline-free).
+**Note**: gTTS (Google Text-to-Speech) requires an internet connection for vocal generation. pyttsx3 provides offline TTS but may require system audio drivers.
 
 4. Copy environment configuration:
 ```bash
