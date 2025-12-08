@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Song Generator - Musicians Fraud</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 30px;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            border: 2px solid #e9ecef;
+        }
+        
+        .panel h2 {
+            color: #2a5298;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #495057;
+        }
+        
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        .checkbox-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .radio-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .radio-item input[type="radio"] {
+            width: auto;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+        
+        .radio-item label {
+            margin: 0;
+            cursor: pointer;
+            font-weight: 400;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .structure-editor {
+            margin-top: 20px;
+        }
+        
+        .section-item {
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .section-type {
+            font-weight: 600;
+            color: #2a5298;
+        }
+        
+        .section-time {
+            color: #6c757d;
+            font-size: 0.9em;
+        }
+        
+        .section-content {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .section-notes {
+            margin-top: 10px;
+        }
+        
+        .section-notes input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .message.active {
+            display: block;
+        }
+        
+        audio {
+            width: 100%;
+            margin-top: 15px;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 AI Song Generator</h1>
+            <p>Create full studio-quality songs with AI - Select genre, input topic, edit lyrics, customize structure & generate audio</p>
+        </header>
+        
+        <div class="main-content">
+            <!-- Step 1: Genre & Topic Selection -->
+            <div class="panel">
+                <h2>Step 1: Genre & Topic</h2>
+                <div class="message" id="step1-message"></div>
+                
+                <div class="form-group">
+                    <label for="genre">Select Genre:</label>
+                    <select id="genre">
+                        {% for genre in genres %}
+                        <option value="{{ genre }}">{{ genre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="topic">Lyrics Topic:</label>
+                    <input type="text" id="topic" placeholder="e.g., love, freedom, adventure, dreams..." value="love">
+                </div>
+                
+                <button onclick="generateLyrics()" id="generate-lyrics-btn">
+                    Generate Lyrics
+                </button>
+                <div class="loading" id="lyrics-loading">
+                    <div class="spinner"></div>
+                    <p>Generating lyrics...</p>
+                </div>
+            </div>
+            
+            <!-- Step 2: Edit Lyrics -->
+            <div class="panel">
+                <h2>Step 2: Edit Lyrics</h2>
+                <div class="message" id="step2-message"></div>
+                
+                <div class="form-group">
+                    <label for="lyrics">Lyrics (Editable):</label>
+                    <textarea id="lyrics" placeholder="Lyrics will appear here after generation. You can edit them freely."></textarea>
+                </div>
+                
+                <button onclick="generateStructure()" id="generate-structure-btn">
+                    Generate Song Structure
+                </button>
+                <div class="loading" id="structure-loading">
+                    <div class="spinner"></div>
+                    <p>Generating song structure...</p>
+                </div>
+            </div>
+            
+            <!-- Step 3: Instrument & Vocal Selection -->
+            <div class="panel">
+                <h2>Step 3: Instruments & Vocals</h2>
+                
+                <div class="form-group">
+                    <label>Select Instruments:</label>
+                    <div class="checkbox-group" id="instruments">
+                        {% for instrument in instruments %}
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="inst-{{ instrument }}" value="{{ instrument }}" 
+                                   {% if instrument in ['Piano', 'Drums', 'Bass'] %}checked{% endif %}>
+                            <label for="inst-{{ instrument }}">{{ instrument }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Vocal Type:</label>
+                    <div class="radio-group">
+                        {% for vocal in vocal_options %}
+                        <div class="radio-item">
+                            <input type="radio" id="vocal-{{ vocal }}" name="vocal" value="{{ vocal }}"
+                                   {% if vocal == 'Mixed' %}checked{% endif %}>
+                            <label for="vocal-{{ vocal }}">{{ vocal }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 4: Song Structure Editor -->
+            <div class="panel">
+                <h2>Step 4: Song Structure</h2>
+                <div class="message" id="step4-message"></div>
+                
+                <div id="structure-info" style="display: none;">
+                    <p><strong>Tempo:</strong> <span id="tempo"></span></p>
+                    <p><strong>Time Signature:</strong> <span id="time-signature"></span></p>
+                    <p><strong>Total Duration:</strong> <span id="total-duration"></span></p>
+                </div>
+                
+                <div class="structure-editor" id="structure-editor">
+                    <p style="color: #6c757d; font-style: italic;">
+                        Song structure will appear here after generation. You can add notes to each section.
+                    </p>
+                </div>
+            </div>
+            
+            <!-- Step 5: Generate Audio -->
+            <div class="panel full-width">
+                <h2>Step 5: Generate Audio</h2>
+                <div class="message" id="step5-message"></div>
+                
+                <div class="button-group">
+                    <button onclick="generateAudio()" id="generate-audio-btn">
+                        🎵 Generate Full Song
+                    </button>
+                    <button onclick="saveProject()" id="save-project-btn">
+                        💾 Save Project
+                    </button>
+                </div>
+                
+                <div class="loading" id="audio-loading">
+                    <div class="spinner"></div>
+                    <p>Generating audio... This may take a minute.</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="audio-progress"></div>
+                    </div>
+                </div>
+                
+                <div id="audio-player" style="display: none;">
+                    <h3 style="margin-top: 20px;">Your Generated Song:</h3>
+                    <audio controls id="audio-element">
+                        <source id="audio-source" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <div style="margin-top: 15px;">
+                        <a id="download-link" class="button" download style="text-decoration: none; display: inline-block;">
+                            ⬇️ Download MP3
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentStructure = null;
+        
+        async function generateLyrics() {
+            const genre = document.getElementById('genre').value;
+            const topic = document.getElementById('topic').value;
+            const btn = document.getElementById('generate-lyrics-btn');
+            const loading = document.getElementById('lyrics-loading');
+            const message = document.getElementById('step1-message');
+            
+            btn.disabled = true;
+            loading.classList.add('active');
+            message.classList.remove('active');
+            
+            try {
+                const response = await fetch('/api/generate-lyrics', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ genre, topic })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('lyrics').value = data.lyrics;
+                    message.textContent = 'Lyrics generated successfully! You can now edit them.';
+                    message.className = 'message success active';
+                } else {
+                    message.textContent = 'Error: ' + data.error;
+                    message.className = 'message error active';
+                }
+            } catch (error) {
+                message.textContent = 'Error generating lyrics: ' + error.message;
+                message.className = 'message error active';
+            } finally {
+                btn.disabled = false;
+                loading.classList.remove('active');
+            }
+        }
+        
+        async function generateStructure() {
+            const genre = document.getElementById('genre').value;
+            const lyrics = document.getElementById('lyrics').value;
+            const btn = document.getElementById('generate-structure-btn');
+            const loading = document.getElementById('structure-loading');
+            const message = document.getElementById('step2-message');
+            
+            if (!lyrics) {
+                message.textContent = 'Please generate or enter lyrics first.';
+                message.className = 'message error active';
+                return;
+            }
+            
+            btn.disabled = true;
+            loading.classList.add('active');
+            message.classList.remove('active');
+            
+            try {
+                const response = await fetch('/api/generate-structure', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ genre, lyrics })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentStructure = data.structure;
+                    displayStructure(data.structure);
+                    message.textContent = 'Song structure generated! You can add notes to each section.';
+                    message.className = 'message success active';
+                } else {
+                    message.textContent = 'Error: ' + data.error;
+                    message.className = 'message error active';
+                }
+            } catch (error) {
+                message.textContent = 'Error generating structure: ' + error.message;
+                message.className = 'message error active';
+            } finally {
+                btn.disabled = false;
+                loading.classList.remove('active');
+            }
+        }
+        
+        function displayStructure(structure) {
+            document.getElementById('structure-info').style.display = 'block';
+            document.getElementById('tempo').textContent = structure.tempo;
+            document.getElementById('time-signature').textContent = structure.time_signature;
+            document.getElementById('total-duration').textContent = 
+                Math.floor(structure.total_duration / 60) + ':' + 
+                String(Math.floor(structure.total_duration % 60)).padStart(2, '0');
+            
+            const editor = document.getElementById('structure-editor');
+            editor.innerHTML = '';
+            
+            structure.sections.forEach((section, index) => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'section-item';
+                sectionDiv.innerHTML = `
+                    <div class="section-header">
+                        <span class="section-type">${section.type.toUpperCase()}</span>
+                        <span class="section-time">
+                            ${formatTime(section.start_time)} - ${formatTime(section.end_time)}
+                            (${section.duration}s)
+                        </span>
+                    </div>
+                    <div class="section-content">${section.content}</div>
+                    <div class="section-notes">
+                        <input type="text" placeholder="Add notes or edits for this section..." 
+                               id="section-note-${index}" 
+                               value="${section.notes || ''}">
+                    </div>
+                `;
+                editor.appendChild(sectionDiv);
+            });
+        }
+        
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return mins + ':' + String(secs).padStart(2, '0');
+        }
+        
+        function getSelectedInstruments() {
+            const instruments = [];
+            document.querySelectorAll('#instruments input[type="checkbox"]:checked').forEach(cb => {
+                instruments.push(cb.value);
+            });
+            return instruments;
+        }
+        
+        function getSelectedVocal() {
+            return document.querySelector('input[name="vocal"]:checked').value;
+        }
+        
+        function updateStructureNotes() {
+            if (currentStructure) {
+                currentStructure.sections.forEach((section, index) => {
+                    const noteInput = document.getElementById(`section-note-${index}`);
+                    if (noteInput) {
+                        section.notes = noteInput.value;
+                    }
+                });
+            }
+        }
+        
+        async function generateAudio() {
+            const genre = document.getElementById('genre').value;
+            const lyrics = document.getElementById('lyrics').value;
+            const instruments = getSelectedInstruments();
+            const vocalType = getSelectedVocal();
+            
+            if (!lyrics) {
+                const message = document.getElementById('step5-message');
+                message.textContent = 'Please generate or enter lyrics first.';
+                message.className = 'message error active';
+                return;
+            }
+            
+            if (!currentStructure) {
+                const message = document.getElementById('step5-message');
+                message.textContent = 'Please generate song structure first.';
+                message.className = 'message error active';
+                return;
+            }
+            
+            // Update structure with notes
+            updateStructureNotes();
+            
+            const btn = document.getElementById('generate-audio-btn');
+            const loading = document.getElementById('audio-loading');
+            const message = document.getElementById('step5-message');
+            const progress = document.getElementById('audio-progress');
+            
+            btn.disabled = true;
+            loading.classList.add('active');
+            message.classList.remove('active');
+            
+            // Simulate progress
+            let progressValue = 0;
+            const progressInterval = setInterval(() => {
+                progressValue += 5;
+                if (progressValue >= 90) {
+                    clearInterval(progressInterval);
+                }
+                progress.style.width = progressValue + '%';
+            }, 500);
+            
+            try {
+                const response = await fetch('/api/generate-audio', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        genre,
+                        lyrics,
+                        structure: currentStructure,
+                        instruments,
+                        vocal_type: vocalType
+                    })
+                });
+                
+                const data = await response.json();
+                
+                clearInterval(progressInterval);
+                progress.style.width = '100%';
+                
+                if (data.success) {
+                    const audioPlayer = document.getElementById('audio-player');
+                    const audioSource = document.getElementById('audio-source');
+                    const audioElement = document.getElementById('audio-element');
+                    const downloadLink = document.getElementById('download-link');
+                    
+                    audioSource.src = data.download_url;
+                    audioElement.load();
+                    downloadLink.href = data.download_url;
+                    
+                    audioPlayer.style.display = 'block';
+                    
+                    message.textContent = 'Song generated successfully! Listen and download below.';
+                    message.className = 'message success active';
+                } else {
+                    message.textContent = 'Error: ' + data.error;
+                    message.className = 'message error active';
+                }
+            } catch (error) {
+                clearInterval(progressInterval);
+                message.textContent = 'Error generating audio: ' + error.message;
+                message.className = 'message error active';
+            } finally {
+                btn.disabled = false;
+                loading.classList.remove('active');
+                setTimeout(() => {
+                    progress.style.width = '0%';
+                }, 1000);
+            }
+        }
+        
+        async function saveProject() {
+            updateStructureNotes();
+            
+            const projectData = {
+                genre: document.getElementById('genre').value,
+                topic: document.getElementById('topic').value,
+                lyrics: document.getElementById('lyrics').value,
+                instruments: getSelectedInstruments(),
+                vocal_type: getSelectedVocal(),
+                structure: currentStructure,
+                timestamp: new Date().toISOString()
+            };
+            
+            try {
+                const response = await fetch('/api/save-project', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(projectData)
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Project saved successfully! Project ID: ' + data.project_id);
+                } else {
+                    alert('Error saving project: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error saving project: ' + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
