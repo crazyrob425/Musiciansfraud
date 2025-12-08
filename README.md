@@ -84,6 +84,8 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+**Note**: Some TTS features require system audio drivers. The app will work with available engines (gTTS is recommended and works offline-free).
+
 4. Copy environment configuration:
 ```bash
 cp .env.example .env
@@ -132,8 +134,10 @@ http://localhost:5000
 5. **Generate Audio**
    - Click "Generate Full Song" to create the audio
    - Wait for processing (may take 30-60 seconds)
+   - **NEW**: Vocals will be generated using Text-to-Speech if lyrics are present
+   - **NEW**: A MIDI file will be automatically generated alongside the MP3
    - Listen to your generated song
-   - Download as MP3
+   - Download as MP3 or MIDI
 
 6. **Save Your Project**
    - Click "Save Project" to save your work
@@ -147,7 +151,11 @@ Musiciansfraud/
 ├── lyrics_generator.py     # Lyrics generation module
 ├── song_structure.py       # Song structure generator
 ├── audio_generator.py      # Audio synthesis and generation
+├── tts_vocals.py          # Text-to-speech vocal generation (NEW)
+├── midi_generator.py      # MIDI file generation (NEW)
+├── soundfont_synth.py     # Soundfont-based synthesis (NEW)
 ├── requirements.txt        # Python dependencies
+├── requirements-optional.txt  # Optional dependencies
 ├── .env.example           # Environment configuration template
 ├── .gitignore             # Git ignore file
 ├── templates/
@@ -155,6 +163,36 @@ Musiciansfraud/
 ├── output/                # Generated songs and projects (auto-created)
 └── README.md              # This file
 ```
+
+## Advanced Features
+
+### Text-to-Speech Vocals
+
+The app now supports generating actual vocal tracks from your lyrics using Text-to-Speech technology:
+
+- **Automatic Integration**: When you generate a song with lyrics, vocals are automatically created
+- **Multiple Engines**: Uses gTTS (Google TTS) for high-quality online synthesis, with pyttsx3 as fallback
+- **Vocal Types**: Different vocal characteristics based on your selection (Male, Female, Mixed, etc.)
+- **Seamless Mixing**: TTS vocals are automatically mixed with the instrumental tracks
+
+### MIDI Export
+
+Every generated song now includes a MIDI file:
+
+- **Automatic Generation**: MIDI files are created alongside MP3 exports
+- **DAW Compatible**: Use the MIDI files in your favorite Digital Audio Workstation
+- **Multi-track**: Separate tracks for each instrument (Piano, Drums, Bass, etc.)
+- **Standard Format**: Uses standard MIDI file format (.mid) compatible with all major music software
+- **Download**: Access via the MIDI download link in the API response
+
+### Enhanced Audio Synthesis
+
+Improved instrument synthesis with:
+
+- **Better Waveforms**: More realistic instrument sounds using advanced synthesis
+- **Soundfont Support**: Infrastructure ready for SF2 soundfont files (optional)
+- **Genre-specific Effects**: Tailored audio processing for each musical genre
+- **Professional Mixing**: Multi-track mixing with automatic volume balancing
 
 ## API Endpoints
 
