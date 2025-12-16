@@ -93,7 +93,28 @@ cp .env.example .env
 
 ## Usage
 
-### Starting the Application
+### Desktop Application Mode (Recommended for Windows Users)
+
+The easiest way to run the app is using the desktop launcher:
+
+**Windows:**
+1. Double-click `AI_Song_Generator.vbs` to launch the app in a native window
+   - OR double-click `start_desktop.bat` to see the console output
+2. (Optional) Run `create_desktop_shortcut.bat` to create a desktop shortcut
+
+**Linux/Mac:**
+1. Make the script executable: `chmod +x start_desktop.sh`
+2. Run: `./start_desktop.sh`
+
+The desktop mode:
+- Opens in a native application window (not browser)
+- Automatically manages the server
+- No need to manually open a browser
+- Closes completely when you close the window
+
+### Web Browser Mode (Traditional)
+
+Alternatively, you can run as a web application:
 
 1. Activate your virtual environment (if created):
 ```bash
