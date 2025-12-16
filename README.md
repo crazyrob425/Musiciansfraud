@@ -14,9 +14,15 @@ A comprehensive AI-powered web application for generating full studio-quality so
 
 🎤 **Vocal Options** - Select vocal type (Male, Female, Mixed, Choir, Rap)
 
+🗣️ **Text-to-Speech Vocals** - **NEW!** Generate actual vocal tracks from lyrics using TTS technology
+
+🎵 **MIDI Export** - **NEW!** Export songs as MIDI files for use in DAWs and music software
+
 🎼 **Song Structure Editor** - Generate and edit song structure (verses, chorus, bridge, hooks, etc.)
 
 📋 **Section Notes** - Add notes and edits to individual song sections
+
+🎧 **Enhanced Audio Synthesis** - **NEW!** Improved audio generation with better instrument sounds
 
 🎵 **Audio Generation** - Convert everything into real audio
 
@@ -28,9 +34,12 @@ A comprehensive AI-powered web application for generating full studio-quality so
 
 - **Backend**: Python Flask
 - **Audio Processing**: Pydub, NumPy, SciPy
+- **Text-to-Speech**: pyttsx3, gTTS (Google Text-to-Speech)
+- **MIDI Generation**: mido library
+- **Advanced Synthesis**: pyfluidsynth (optional, for soundfont support)
 - **AI Components**: Open-source/template-based generation
 - **Frontend**: HTML, CSS, JavaScript
-- **Audio Format**: MP3 (320kbps)
+- **Audio Format**: MP3 (320kbps), MIDI
 
 ## Installation
 
@@ -75,6 +84,8 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+**Note**: gTTS (Google Text-to-Speech) requires an internet connection for vocal generation. pyttsx3 provides offline TTS but may require system audio drivers.
+
 4. Copy environment configuration:
 ```bash
 cp .env.example .env
@@ -82,7 +93,28 @@ cp .env.example .env
 
 ## Usage
 
-### Starting the Application
+### Desktop Application Mode (Recommended for Windows Users)
+
+The easiest way to run the app is using the desktop launcher:
+
+**Windows:**
+1. Double-click `AI_Song_Generator.vbs` to launch the app in a native window
+   - OR double-click `start_desktop.bat` to see the console output
+2. (Optional) Run `create_desktop_shortcut.bat` to create a desktop shortcut
+
+**Linux/Mac:**
+1. Make the script executable: `chmod +x start_desktop.sh`
+2. Run: `./start_desktop.sh`
+
+The desktop mode:
+- Opens in a native application window (not browser)
+- Automatically manages the server
+- No need to manually open a browser
+- Closes completely when you close the window
+
+### Web Browser Mode (Traditional)
+
+Alternatively, you can run as a web application:
 
 1. Activate your virtual environment (if created):
 ```bash
@@ -123,8 +155,10 @@ http://localhost:5000
 5. **Generate Audio**
    - Click "Generate Full Song" to create the audio
    - Wait for processing (may take 30-60 seconds)
+   - **NEW**: Vocals will be generated using Text-to-Speech if lyrics are present
+   - **NEW**: A MIDI file will be automatically generated alongside the MP3
    - Listen to your generated song
-   - Download as MP3
+   - Download as MP3 or MIDI
 
 6. **Save Your Project**
    - Click "Save Project" to save your work
@@ -138,7 +172,11 @@ Musiciansfraud/
 ├── lyrics_generator.py     # Lyrics generation module
 ├── song_structure.py       # Song structure generator
 ├── audio_generator.py      # Audio synthesis and generation
+├── tts_vocals.py          # Text-to-speech vocal generation (NEW)
+├── midi_generator.py      # MIDI file generation (NEW)
+├── soundfont_synth.py     # Soundfont-based synthesis (NEW)
 ├── requirements.txt        # Python dependencies
+├── requirements-optional.txt  # Optional dependencies
 ├── .env.example           # Environment configuration template
 ├── .gitignore             # Git ignore file
 ├── templates/
@@ -146,6 +184,36 @@ Musiciansfraud/
 ├── output/                # Generated songs and projects (auto-created)
 └── README.md              # This file
 ```
+
+## Advanced Features
+
+### Text-to-Speech Vocals
+
+The app now supports generating actual vocal tracks from your lyrics using Text-to-Speech technology:
+
+- **Automatic Integration**: When you generate a song with lyrics, vocals are automatically created
+- **Multiple Engines**: Uses gTTS (Google TTS) for high-quality online synthesis, with pyttsx3 as fallback
+- **Vocal Types**: Different vocal characteristics based on your selection (Male, Female, Mixed, etc.)
+- **Seamless Mixing**: TTS vocals are automatically mixed with the instrumental tracks
+
+### MIDI Export
+
+Every generated song now includes a MIDI file:
+
+- **Automatic Generation**: MIDI files are created alongside MP3 exports
+- **DAW Compatible**: Use the MIDI files in your favorite Digital Audio Workstation
+- **Multi-track**: Separate tracks for each instrument (Piano, Drums, Bass, etc.)
+- **Standard Format**: Uses standard MIDI file format (.mid) compatible with all major music software
+- **Download**: Access via the MIDI download link in the API response
+
+### Enhanced Audio Synthesis
+
+Improved instrument synthesis with:
+
+- **Better Waveforms**: More realistic instrument sounds using advanced synthesis
+- **Soundfont Support**: Infrastructure ready for SF2 soundfont files (optional)
+- **Genre-specific Effects**: Tailored audio processing for each musical genre
+- **Professional Mixing**: Multi-track mixing with automatic volume balancing
 
 ## API Endpoints
 
@@ -210,12 +278,16 @@ Generate audio file from all components.
 {
   "success": true,
   "song_id": "uuid-string",
-  "download_url": "/api/download/uuid-string"
+  "download_url": "/api/download/uuid-string",
+  "midi_url": "/api/download-midi/uuid-string"
 }
 ```
 
 ### GET /api/download/{song_id}
 Download generated MP3 file.
+
+### GET /api/download-midi/{song_id}
+Download generated MIDI file.
 
 ### POST /api/save-project
 Save project state.
@@ -251,19 +323,29 @@ APP_PORT=5000
 ### Audio Generation
 - Multi-track synthesis
 - Instrument-specific waveforms
+- **Text-to-Speech vocals** - Actual spoken/sung lyrics using TTS engines
+- **MIDI-based composition** - Generate and export standard MIDI files
+- **Enhanced audio synthesis** - Improved instrument sounds and synthesis
 - Genre-appropriate effects
 - Dynamic mixing and normalization
 - Studio-quality MP3 export (320kbps)
+- **MIDI export** for use in Digital Audio Workstations (DAWs)
 
 ## Limitations & Future Improvements
 
-Current implementation uses synthesized audio. Future versions could integrate:
-- Advanced AI models for more natural lyrics
-- Text-to-speech for actual vocals
-- MIDI-based composition
-- More sophisticated audio synthesis
-- Integration with music generation APIs
-- Real instrument samples
+Current implementation provides significant improvements with:
+- ✅ **Text-to-Speech for actual vocals** - Using pyttsx3 and gTTS
+- ✅ **MIDI-based composition** - Full MIDI file generation and export
+- ✅ **More sophisticated audio synthesis** - Improved instrument synthesis
+- ✅ **Integration ready for music generation APIs** - Modular design for easy API integration
+- ✅ **Support for real instrument samples** - Via soundfont integration (FluidSynth)
+
+Future enhancements could include:
+- Advanced AI models for more natural lyrics (GPT-based)
+- Neural network-based music generation
+- Professional-grade instrument samples
+- Real-time composition features
+- Cloud-based rendering for faster generation
 
 ## Contributing
 

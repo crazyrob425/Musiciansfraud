@@ -1,0 +1,98 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║                    AI SONG GENERATOR - DESKTOP MODE                      ║
+║                          Quick Start Guide                               ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+  OPTION 1: SILENT LAUNCH (Recommended)
+  ┌────────────────────────────────────────────────────────────────┐
+  │  1. Double-click: AI_Song_Generator.vbs                        │
+  │                                                                 │
+  │  2. App opens in native window automatically                   │
+  │     (No command window shown)                                  │
+  └────────────────────────────────────────────────────────────────┘
+
+  OPTION 2: WITH CONSOLE OUTPUT
+  ┌────────────────────────────────────────────────────────────────┐
+  │  1. Double-click: start_desktop.bat                            │
+  │                                                                 │
+  │  2. Console shows startup progress                             │
+  │                                                                 │
+  │  3. App opens in native window                                 │
+  └────────────────────────────────────────────────────────────────┘
+
+  OPTION 3: DESKTOP SHORTCUT (One-time setup)
+  ┌────────────────────────────────────────────────────────────────┐
+  │  1. Run: create_desktop_shortcut.bat (once)                    │
+  │                                                                 │
+  │  2. Shortcut appears on desktop                                │
+  │                                                                 │
+  │  3. Double-click shortcut anytime to launch                    │
+  └────────────────────────────────────────────────────────────────┘
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                           WHAT YOU'LL SEE                                ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+  First Launch (One-time setup - takes 2-3 minutes)
+  ┌────────────────────────────────────────────────────────────────┐
+  │  🎵 AI Song Generator - Musicians Fraud                        │
+  │  ================================================               │
+  │  Creating virtual environment...                               │
+  │  Installing dependencies...                                    │
+  │  Starting application...                                       │
+  │  ✅ Server ready at http://127.0.0.1:5000                      │
+  │  Opening desktop window...                                     │
+  │                                                                 │
+  │  [Native Application Window Opens]                             │
+  └────────────────────────────────────────────────────────────────┘
+
+  Subsequent Launches (Fast - 1-2 seconds)
+  ┌────────────────────────────────────────────────────────────────┐
+  │  🎵 AI Song Generator - Musicians Fraud                        │
+  │  ================================================               │
+  │  Starting application...                                       │
+  │  ✅ Server ready at http://127.0.0.1:5000                      │
+  │  Opening desktop window...                                     │
+  │                                                                 │
+  │  [Native Application Window Opens Immediately]                 │
+  └────────────────────────────────────────────────────────────────┘
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                         KEY FEATURES                                     ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+  ✅ No browser needed - runs as native desktop app
+  ✅ No manual server starting - everything automatic
+  ✅ Clean shutdown - just close the window
+  ✅ No "localhost refused to connect" errors
+  ✅ Works like any other Windows application
+  ✅ All features available: TTS vocals, MIDI export, etc.
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                      FILE STRUCTURE                                      ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+  Musiciansfraud/
+  ├── AI_Song_Generator.vbs ← Double-click this (silent launch)
+  ├── start_desktop.bat     ← Or this (with console)
+  ├── start_desktop.sh      ← Linux/Mac version
+  ├── create_desktop_shortcut.bat ← Run once for desktop icon
+  ├── desktop_app.py        ← Main desktop wrapper
+  ├── app.py                ← Flask web server
+  └── DESKTOP_SETUP.md      ← Detailed setup guide
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                       TROUBLESHOOTING                                    ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+  Problem: "Python is not recognized"
+  Solution: Install Python 3.8+ from python.org (check "Add to PATH")
+
+  Problem: Desktop mode doesn't work
+  Solution: App automatically falls back to browser mode (same features)
+
+  Problem: First launch takes too long
+  Solution: Normal - installing dependencies. Subsequent launches are fast
+
+  See DESKTOP_SETUP.md for complete troubleshooting guide.
+

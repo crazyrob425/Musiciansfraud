@@ -9,6 +9,19 @@ from pydub import AudioSegment
 from pydub.generators import Sine, Square, Sawtooth
 import random
 
+# Import new modules with optional availability
+try:
+    from tts_vocals import TTSVocalsGenerator
+    TTS_AVAILABLE = True
+except ImportError:
+    TTS_AVAILABLE = False
+
+try:
+    from midi_generator import MIDIGenerator
+    MIDI_AVAILABLE = True
+except ImportError:
+    MIDI_AVAILABLE = False
+
 
 class AudioGenerator:
     """Generate audio using synthesis and procedural generation"""
@@ -24,6 +37,22 @@ class AudioGenerator:
         """Initialize the audio generator"""
         # Default sample rate
         self.sample_rate = 44100
+        
+        # Initialize TTS vocals generator if available
+        self.tts_generator = None
+        if TTS_AVAILABLE:
+            try:
+                self.tts_generator = TTSVocalsGenerator()
+            except Exception as e:
+                print(f"TTS initialization failed: {e}")
+        
+        # Initialize MIDI generator if available
+        self.midi_generator = None
+        if MIDI_AVAILABLE:
+            try:
+                self.midi_generator = MIDIGenerator()
+            except Exception as e:
+                print(f"MIDI initialization failed: {e}")
         
         # Instrument frequency ranges (in Hz)
         self.instrument_ranges = {
@@ -88,6 +117,15 @@ class AudioGenerator:
         Returns:
             str: Path to the generated MP3 file
         """
+        # Generate MIDI file alongside audio if available
+        if self.midi_generator and self.midi_generator.is_available():
+            try:
+                midi_path = output_path.replace('.mp3', '.mid')
+                self.midi_generator.generate_midi(structure, genre, instruments, midi_path)
+                print(f"Generated MIDI file: {midi_path}")
+            except Exception as e:
+                print(f"MIDI generation failed: {e}")
+        
         # Get tempo for genre
         tempo = self.genre_tempos.get(genre, 120)
         beat_duration = 60.0 / tempo * 1000  # Convert to milliseconds
@@ -111,8 +149,8 @@ class AudioGenerator:
                 melody_track = self._generate_melody_track(instrument, structure, tempo)
                 tracks.append(melody_track)
         
-        # Generate vocal track (placeholder tone for now)
-        vocal_track = self._generate_vocal_track(structure, vocal_type, tempo)
+        # Generate vocal track (with TTS if available)
+        vocal_track = self._generate_vocal_track(structure, vocal_type, tempo, lyrics)
         tracks.append(vocal_track)
         
         # Mix all tracks together
@@ -234,8 +272,26 @@ class AudioGenerator:
         
         return melody_track + self.MELODY_VOLUME_REDUCTION
     
-    def _generate_vocal_track(self, structure, vocal_type, tempo):
-        """Generate a vocal track (placeholder with tones)"""
+    def _generate_vocal_track(self, structure, vocal_type, tempo, lyrics=""):
+        """Generate a vocal track using TTS if available, otherwise placeholder tones"""
+        # Try to use TTS first for actual vocals
+        if self.tts_generator and lyrics:
+            try:
+                tts_audio = self.tts_generator.generate_vocals(lyrics, vocal_type, tempo)
+                if tts_audio:
+                    # Adjust duration to match song structure
+                    total_duration = structure.get("total_duration", 180) * 1000
+                    if len(tts_audio) < total_duration:
+                        # Pad with silence
+                        tts_audio = tts_audio + AudioSegment.silent(duration=int(total_duration - len(tts_audio)))
+                    elif len(tts_audio) > total_duration:
+                        # Trim to fit
+                        tts_audio = tts_audio[:int(total_duration)]
+                    return tts_audio + self.VOCAL_VOLUME_REDUCTION
+            except Exception as e:
+                print(f"TTS vocal generation failed, using fallback: {e}")
+        
+        # Fallback to original tone-based vocals
         beat_duration = 60.0 / tempo * 1000
         total_duration = structure.get("total_duration", 180) * 1000
         

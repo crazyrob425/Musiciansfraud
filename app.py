@@ -130,7 +130,8 @@ def generate_audio():
         return jsonify({
             'success': True,
             'song_id': song_id,
-            'download_url': f'/api/download/{song_id}'
+            'download_url': f'/api/download/{song_id}',
+            'midi_url': f'/api/download-midi/{song_id}'
         })
     except Exception as e:
         return jsonify({
@@ -153,6 +154,28 @@ def download_song(song_id):
             return jsonify({
                 'success': False,
                 'error': 'File not found'
+            }), 404
+    except Exception as e:
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.route('/api/download-midi/<song_id>')
+def download_midi(song_id):
+    """Download generated MIDI file"""
+    try:
+        file_path = os.path.join(OUTPUT_DIR, f'{song_id}.mid')
+        if os.path.exists(file_path):
+            return send_file(file_path, 
+                           as_attachment=True,
+                           download_name=f'ai_song_{song_id}.mid',
+                           mimetype='audio/midi')
+        else:
+            return jsonify({
+                'success': False,
+                'error': 'MIDI file not found'
             }), 404
     except Exception as e:
         return jsonify({

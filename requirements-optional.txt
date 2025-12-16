@@ -1,0 +1,6 @@
+# Optional dependencies for enhanced features
+# Note: pyfluidsynth may require manual installation on some systems
+# Install with: pip install -r requirements-optional.txt
+
+# FluidSynth for soundfont-based synthesis
+# pyfluidsynth>=1.3.0
