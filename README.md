@@ -82,7 +82,17 @@ cp .env.example .env
 
 ## Usage
 
-### Starting the Application
+### Windows Executable
+
+**For Windows users**, you can download and use the standalone executable instead of running from source:
+
+1. Download the installer from the [Releases](https://github.com/crazyrob425/Musiciansfraud/releases) page
+2. Run the installer and follow the wizard
+3. Launch from Start Menu or Desktop shortcut
+
+**To build the Windows executable yourself**, see [BUILD.md](BUILD.md) for detailed instructions.
+
+### Starting the Application (From Source)
 
 1. Activate your virtual environment (if created):
 ```bash
@@ -264,6 +274,24 @@ Current implementation uses synthesized audio. Future versions could integrate:
 - More sophisticated audio synthesis
 - Integration with music generation APIs
 - Real instrument samples
+
+## Building Windows Executable
+
+This project supports building as a standalone Windows executable with an installer. See [BUILD.md](BUILD.md) for:
+
+- **Quick build** using `build.bat`
+- **Manual build** with PyInstaller
+- **Creating installer** with Inno Setup
+- **Troubleshooting** build issues
+- **Distribution** guidelines
+
+### Quick Build
+
+```batch
+build.bat
+```
+
+The executable will be created at `dist\MusiciansFraud.exe`
 
 ## Contributing
 
